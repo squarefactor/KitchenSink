@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
+  <id>com.appcelerator.ks</id>
+  <name>KitchenSink</name>
+  <version>1.0</version>
+  <icon>appicon.png</icon>
+	<persistent-wifi>false</persistent-wifi>
+  <icon>appicon.png</icon>
+	<statusbar-style>opaque</statusbar-style>
+  <windows>
+    <window>
+      <id>one</id>
+      <url>index.html</url>
+      <backgroundColor>#ffffff</backgroundColor>
+      <icon>appicon.png</icon>
+		  <title>Page 1</title>
+		  <fullscreen>false</fullscreen>
+		  <orientation>either</orientation>
+	  </window>
+    <window>
+      <id>two</id>
+      <url>index2.html</url>
+      <backgroundColor>#ffffff</backgroundColor>
+      <icon>appicon.png</icon>
+			<fullscreen>false</fullscreen>
+			<title>Page 2</title>
+			<orientation>either</orientation>
+    </window>
+  </windows>
+</ti:app>

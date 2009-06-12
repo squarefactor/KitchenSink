@@ -1,0 +1,477 @@
+<html>
+<head>
+
+
+</head>
+<body style="background-color:#fff">
+
+	<div id="message"></div>
+	<div id="accelerometer" style="display:none">
+		<div id="x">x</div>
+		<div id="y">y</div>
+		<div id="z">z</div>
+	</div>
+	<div id="o" style="display:none">
+		<div id="orientation">Orientation: Portrait</div>
+	</div>
+
+	<div id="shake" style="display:none">
+		I am at rest
+	</div>
+
+	<div id="geolocation" style="display:none">
+		<div id="timestamp"></div>
+		<div id="latitude"></div>
+		<div id="longitude"></div>
+		<div id="altitude"></div>
+		<div id="accuracy"></div>
+		<div id="altitudeAccuracy"></div>
+		<div id="heading"></div>
+		<div id="speed"></div>
+		
+	</div>
+	<div id="audio_controls" style="display:none">
+		<div><input type="button" id="play" value="play"/></div>
+		<div><input type="button" id="pause" value="pause"/></div>
+		<div><input type="button" id="reset" value="reset"/></div>
+		<div><input type="button" id="startloop" value="start loop"/></div>
+		<div><input type="button" id="endloop" value="end loop"/></div>
+		<div><input type="button" id="volume_up" value="volume +"/></div>
+		<div><input type="button" id="volume_down" value="volume -"/></div>
+		<div id="isPlaying"></div>
+		<div id="isPaused"></div>
+		<div id="isLooping"></div>
+		<div id="volume"></div>
+		
+	</div>
+	
+	<script>
+	var a = Titanium.UI.createAlertDialog();
+	a.setTitle('Test');
+	a.setButtonNames(['OK']);
+	
+
+	if (Titanium.App.Properties.getBool('SHAKE')==true)
+	{
+
+		document.getElementById('shake').style.display = 'block';
+		Titanium.UI.currentWindow.addEventListener('unfocused',function()
+		{
+			document.getElementById('shake').style.display = 'none';
+		});
+		Titanium.Gesture.addEventListener('shake',function(e)
+		{
+		 	document.getElementById('shake').innerHTML = 'You shook me';
+			setTimeout(function()
+			{
+			 	document.getElementById('shake').innerHTML = 'I am at rest';
+				
+			},1000)
+		});
+		Titanium.App.Properties.setBool('SHAKE',false);
+	}
+	
+	if (Titanium.App.Properties.getBool('ORIENTATION')==true)
+	{
+
+		document.getElementById('o').style.display = 'block';
+		Titanium.UI.currentWindow.addEventListener('unfocused',function()
+		{
+			document.getElementById('o').style.display = 'none';
+		});
+		Titanium.Gesture.addEventListener('orientationchange',function(e)
+		{
+			var o = '';
+			if (Titanium.Gesture.isLandscape(e.to))
+			{
+				o= 'Orientation: Landscape';
+			}
+			else if (Titanium.Gesture.isPortrait(e.to))
+			{
+				o = 'Orientation: Portrait';
+			}
+			else
+			{
+				o = 'Orientation: return unknown';
+			}
+		 	document.getElementById('orientation').innerHTML = o;
+		});
+		Titanium.App.Properties.setBool('ORIENTATION',false);
+	}
+	
+	
+	if (Titanium.App.Properties.getBool('ACCELEROMETER')==true)
+	{
+
+		document.getElementById('accelerometer').style.display = 'block';
+		Titanium.UI.currentWindow.addEventListener('unfocused',function()
+		{
+			document.getElementById('accelerometer').style.display = 'none';
+		});
+		
+		
+		Titanium.Accelerometer.addEventListener('update',function(e)
+		{
+		 	document.getElementById('x').innerHTML = 'x: '+ e.x;
+			document.getElementById('y').innerHTML = 'y: '+e.y;
+			document.getElementById('z').innerHTML = 'z: '+e.z
+		});
+		Titanium.App.Properties.setBool('ACCELEROMETER',false);
+	}
+	
+	if (Titanium.App.Properties.getBool('GEOLOCATION_WATCH')==true)
+	{
+
+		document.getElementById('geolocation').style.display = 'block';
+		Titanium.UI.currentWindow.addEventListener('unfocused',function()
+		{
+			document.getElementById('geolocation').style.display = 'none';
+		});
+		
+		
+		Titanium.Geolocation.watchPosition(
+			function(pos)
+			{
+				var timestamp = document.getElementById('timestamp');
+				var latitude = document.getElementById('latitude');
+				var longitude = document.getElementById('longitude');
+				var accuracy = document.getElementById('accuracy');
+				var altitudeAccuracy = document.getElementById('altitudeAccuracy');
+				var heading = document.getElementById('heading');
+				var speed = document.getElementById('speed');
+				
+				var coords = pos.coords;
+				timestamp.innerHTML = 'Timestamp: ' + pos.timestamp;
+				latitude.innerHTML = 'Latitude: ' + coords.latitude;
+				longitude.innerHTML = 'Longitude: ' + coords.longitude;
+			    altitude.innerHTML= 'Altitude: ' + coords.altitude;
+				accuracy.innerHTML = 'Accuracy: ' + coords.accuracy;
+				altitudeAccuracy.innerHTML = 'Altitude Accuracy: ' + coords.altitudeAccuracy;
+				heading.innerHTML = 'Heading: ' + coords.heading;
+				speed.innerHTML = 'Speed: ' + coords.speed;
+				
+			}, 
+			function()
+			{
+				
+			}
+		);
+
+
+		Titanium.App.Properties.setBool('GEOLOCATION_WATCH',false);
+
+	}
+	
+	if (Titanium.App.Properties.getBool('GEOLOCATION')==true)
+	{
+
+		document.getElementById('geolocation').style.display = 'block';
+		Titanium.UI.currentWindow.addEventListener('unfocused',function()
+		{
+			document.getElementById('geolocation').style.display = 'none';
+		});
+		
+		
+		Titanium.Geolocation.getCurrentPosition(
+			function(pos)
+			{
+				var timestamp = document.getElementById('timestamp');
+				var latitude = document.getElementById('latitude');
+				var longitude = document.getElementById('longitude');
+				var accuracy = document.getElementById('accuracy');
+				var altitudeAccuracy = document.getElementById('altitudeAccuracy');
+				var heading = document.getElementById('heading');
+				var speed = document.getElementById('speed');
+				
+				var coords = pos.coords;
+				timestamp.innerHTML = 'Timestamp: ' + pos.timestamp;
+				latitude.innerHTML = 'Latitude: ' + coords.latitude;
+				longitude.innerHTML = 'Longitude: ' + coords.longitude;
+			    altitude.innerHTML= 'Altitude: ' + coords.altitude;
+				accuracy.innerHTML = 'Accuracy: ' + coords.accuracy;
+				altitudeAccuracy.innerHTML = 'Altitude Accuracy: ' + coords.altitudeAccuracy;
+				heading.innerHTML = 'Heading: ' + coords.heading;
+				speed.innerHTML = 'Speed: ' + coords.speed;
+				
+			}, 
+			function()
+			{
+				
+			}
+		);
+
+
+		Titanium.App.Properties.setBool('GEOLOCATION',false);
+
+	}
+	if (Titanium.App.Properties.getBool('logging')==true)
+	{
+		Titanium.API.log('ERROR','>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR MESSAGE');
+		Titanium.API.debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>DEBUG MESSAGE');
+		Titanium.API.error('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR2 MESSAGE');
+		Titanium.API.warn('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>WARN MESSAGE');
+		Titanium.API.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>INFO MESSAGE');
+		Titanium.API.trace('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TRACE MESSAGE');
+		Titanium.API.notice('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>NOTICE MESSAGE');
+		Titanium.API.critical('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>CRITICAL MESSAGE');
+		Titanium.API.fatal('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>FATAL MESSAGE');
+		
+		Titanium.App.Properties.setBool('logging',false);
+	}
+	if (Titanium.App.Properties.getBool('APP')==true)
+	{
+		var html  = '';
+		html+= 'ID: ' + Titanium.App.getID() + '<br/>';
+		html+= 'Name: ' + Titanium.App.getName() + '<br/>';
+		html+= 'Version: ' + Titanium.App.getVersion() + '<br/>';
+		html+= 'Publisher: ' + Titanium.App.getPublisher() + '<br/>';
+		html+= 'URL: ' + Titanium.App.getURL() + '<br/>';
+		html+= 'Description: ' + Titanium.App.getDescription() + '<br/>';
+		html+= 'Copyright: ' + Titanium.App.getCopyright() + '<br/>';
+		html+= 'GUID: ' + Titanium.App.getGUID() + '<br/>';
+		html+= 'Path: ' + Titanium.App.appURLToPath('index.html') + '<br/>';
+		document.getElementById('message').innerHTML = html;
+		Titanium.App.Properties.setBool('APP',false);
+	}
+
+	if (Titanium.App.Properties.getBool('PROPERTIES')==true)
+	{
+		Titanium.App.Properties.setString('String','String Value');
+		Titanium.App.Properties.setInt('Int',10);
+		Titanium.App.Properties.setBool('Bool',true);
+		Titanium.App.Properties.setDouble('Double',10.0);
+
+		var html  = '';
+		html+= 'String: ' + Titanium.App.Properties.getString('String') + '<br/>';
+		html+= 'Int: ' + Titanium.App.Properties.getInt('Int') + '<br/>';
+		html+= 'Bool: ' + Titanium.App.Properties.getBool('Bool') + '<br/>';
+		html+= 'Double: ' + Titanium.App.Properties.getDouble('Double') + '<br/>';
+
+		document.getElementById('message').innerHTML = html;
+		Titanium.App.Properties.setBool('PROPERTIES',false);
+	}
+	if (Titanium.App.Properties.getBool('DATABASE')==true)
+	{
+		var html = '';
+
+		var db = Titanium.Database.open('mydb');
+
+		db.execute('CREATE TABLE IF NOT EXISTS TESTTABLE1  (ID INTEGER, NAME TEXT)');
+		db.execute('INSERT INTO TESTTABLE1 (ID, NAME ) VALUES(?,?)',1,'Name 1');
+		db.execute('INSERT INTO TESTTABLE1 (ID, NAME ) VALUES(?,?)',2,'Name 2');
+		db.execute('INSERT INTO TESTTABLE1 (ID, NAME ) VALUES(?,?)',3,'Name 3');
+		db.execute('INSERT INTO TESTTABLE1 (ID, NAME ) VALUES(?,?)',4,'Name 4');
+		html += 'JUST INSERTED, rowsAffected = ' + db.rowsAffected + '<br/>';
+		html += 'JUST INSERTED, lastInsertRowId = ' + db.lastInsertRowId + '<br/>';
+		
+		var rows = db.execute('SELECT * FROM TESTTABLE1');
+		html += 'row count = ' + rows.getRowCount() + '<br/>';
+		
+		while (rows.isValidRow())
+		{
+			html += 'ID: ' + rows.field(0) + ' NAME: ' + rows.fieldByName('name') + '<br/>';
+			rows.next();
+		}
+		// close database
+		rows.close();
+		
+		db.execute('DELETE FROM TESTTABLE1');
+		db.execute('DROP TABLE TESTTABLE1');
+		
+		db.close();
+		
+		document.getElementById('message').innerHTML = html;
+		
+		Titanium.App.Properties.setBool('DATABASE',false);
+	
+	}
+
+	if (Titanium.App.Properties.getBool('PLATFORM')==true)
+	{
+		var type = (Titanium.Network.networkType==0)?'None':(Titanium.Network.networkType==1)?'WiFi':
+			(Titanium.Network.networkType==2)?'Mobile':(Titanium.Network.networkType==3)?'Network LAN':'Unknown';
+		
+		var html  = '';
+		html+= 'Name: ' + Titanium.Platform.name + '<br/>';
+		html+= 'Model: ' + Titanium.Platform.model + '<br/>';
+		html+= 'Version: ' + Titanium.Platform.version + '<br/>';
+		html+= 'Available Memory: ' + Titanium.Platform.availableMemory + '<br/>';
+		html+= 'Phone Number: ' + Titanium.Platform.phoneNumber + '<br/>';
+		html+= 'OS Type: ' + Titanium.Platform.ostype + '<br/>';
+		html+= 'Architecture: ' + Titanium.Platform.architecture + '<br/>';
+		html+= 'Address: ' + Titanium.Platform.address + '<br/>';
+		html+= 'ID: ' + Titanium.Platform.id + '<br/>';
+		html+= 'Mac Address: ' + Titanium.Platform.macaddress + '<br/>';
+		html+= 'Processor count: ' + Titanium.Platform.processorCount + '<br/>';
+		html+= 'Username: ' + Titanium.Platform.username + '<br/>';
+		html+= 'Create UUID: ' + Titanium.Platform.createUUID() + '<br/>';
+		html+= 'Titanium.Netowrk.online: ' + Titanium.Network.online  + '<br/>';
+		html+= 'Titanium.Netowrk.networkType: ' + type  + '<br/>';
+
+		document.getElementById('message').innerHTML = html;
+		Titanium.App.Properties.setBool('PLATFORM',false);
+
+	}
+
+	if (Titanium.App.Properties.getBool('SOUND') == true)
+	{
+		var isPlaying = document.getElementById('isPlaying');
+		var isPaused = document.getElementById('isPaused');
+		var isLooping = document.getElementById('isLooping');
+		var volume = document.getElementById('volume');
+		
+		// create a sound object
+		var s = Titanium.Media.createSound('cricket.wav');
+
+		document.getElementById('audio_controls').style.display = 'block';
+		Titanium.UI.currentWindow.addEventListener('unfocused',function()
+		{
+			document.getElementById('audio_controls').style.display = 'none';
+			s.stop();
+			s.release();
+		});
+		
+		document.getElementById('play').onclick = function()
+		{
+			s.play();
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+			
+		};
+		document.getElementById('pause').onclick = function()
+		{
+			s.pause();
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+
+		};
+		document.getElementById('reset').onclick = function()
+		{
+			s.reset();
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+		};
+		document.getElementById('startloop').onclick = function()
+		{
+			s.setLooping(true)
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+		};
+		document.getElementById('endloop').onclick = function()
+		{
+			s.setLooping(false);
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+		};
+		document.getElementById('volume_up').onclick = function()
+		{
+			var v = s.getVolume();
+			if (v < 1.0)
+			{
+				s.setVolume(v+0.1);
+			}
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+			
+		};
+		document.getElementById('volume_down').onclick = function()
+		{
+			var v = s.getVolume();
+			if (v > 0)
+			{
+				s.setVolume(v-0.1);
+			}
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+		};
+
+
+		// add event listener on sound
+		s.addEventListener('complete',function()
+		{
+			a.setMessage('sound completed');
+			a.show();
+			isPlaying.innerHTML = 'isPlaying = ' + s.isPlaying();
+			isPaused.innerHTML = 'isPaused = ' + s.isPaused();
+			isLooping.innerHTML = 'isLooping = ' + s.isLooping();
+			volume.innerHTML = 'volume = ' + s.getVolume();
+
+			
+		});
+		Titanium.App.Properties.setBool('SOUND',false);
+		
+	}
+	
+	if (Titanium.App.Properties.getBool('optionsDialog')==true)
+	{
+		// create dialog
+		var dialog = Titanium.UI.createOptionDialog();
+
+		// set button titles
+		dialog.setOptions(["foo","bar","cancel"]);
+
+		// set index for destructive button (IPHONE ONLY)
+		dialog.setDestructive(1);
+
+		// set index for cancel (IPHONE ONLY)
+		dialog.setCancel(2);
+
+		// set title
+		dialog.setTitle('My Title');
+
+		// add event listener
+		dialog.addEventListener('click',function(event)
+		{
+			a.setMessage('you clicked ' + event.index);
+			a.show();
+		});
+
+		// show dialog
+		dialog.show();
+
+		
+		Titanium.App.Properties.setBool('optionsDialog',false)
+	}
+
+	if (Titanium.App.Properties.getBool('alertDialog')==true)
+	{
+		var b = Titanium.UI.createAlertDialog();
+
+		// set title
+		b.setTitle('New Alert');
+
+		// set message
+		b.setMessage('This is my message');
+
+		// set button names
+		b.setButtonNames(['OK','Cancel']);
+
+		b.addEventListener('click',function(event)
+		{
+			a.setMessage('you clicked ' + event.index);
+			a.show();
+		});
+
+		// show alert
+		b.show();
+		Titanium.App.Properties.setBool('alertDialog',false)
+	}
+
+	
+	</script>
+</body>
+</html>

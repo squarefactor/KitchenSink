@@ -1,0 +1,194 @@
+<html>
+<head>
+	<script type="text/javascript" src="tiui/js/tiui.js"></script>
+
+	<link href="tiui/css/tiui.css" rel="stylesheet" type="text/css">
+
+</head>
+<body style="background-color:#fff">
+
+	<div id="close" style="color:#111;text-align:center;margin-top:20px">click me to go back</div>
+	<div id="message"></div>
+	<script>
+	Titanium.UI.ready = function()
+	{
+		document.getElementById('close').onclick = function()
+		{
+			Titanium.UI.currentWindow.close();
+		};
+		var a = Titanium.UI.createAlertDialog();
+		a.setTitle('Test');
+		a.setButtonNames(['OK']);
+
+
+		if(Titanium.App.Properties.getBool('focusEvents')==true)
+		{
+
+			document.getElementById('message').innerHTML = 'should get  UNFOCUSED alerts';
+			Titanium.UI.currentWindow.addEventListener('unfocused',function()
+			{
+				a.setMessage('UNFOCUSED');
+				a.show();
+			});
+
+			Titanium.App.Properties.setBool('focusEvents',false);
+		}
+		if (Titanium.App.Properties.getBool('showToolbarButtons')==true)
+		{
+			var action = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.ACTION
+			});
+			action.addEventListener('click',function(event)
+			{
+				document.getElementById('message').innerHTML = 'You clicked ACTION';
+			});
+
+			var flexSpace = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+			});
+
+			var camera = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.CAMERA
+			});
+			camera.addEventListener('click',function(event)
+			{
+				document.getElementById('message').innerHTML = 'You clicked CAMERA';
+			});
+
+			var compose = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE
+			});
+			compose.addEventListener('click',function(event)
+			{
+				document.getElementById('message').innerHTML = 'You clicked COMPOSE';
+			});
+
+			var bookmarks = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.BOOKMARKS
+			});
+			bookmarks.addEventListener('click',function(event)
+			{
+				document.getElementById('message').innerHTML = 'You clicked BOOKMARKS';
+			});
+
+			var search = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.SEARCH
+			});
+			search.addEventListener('click',function(event)
+			{
+				document.getElementById('message').innerHTML = 'You clicked SEARCH';
+			});
+			// set toolbar
+
+			Titanium.UI.currentWindow.setToolbar([action,flexSpace,camera, 
+				flexSpace,compose,flexSpace,bookmarks,flexSpace,search])	
+			Titanium.App.Properties.setBool('showToolbarButtons',false);
+		}
+		if (Titanium.App.Properties.getBool('showNavButtons3')==true)
+		{
+			// create buttton
+			var one = Titanium.UI.createButton({
+				title:'BORDERED',
+				style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
+			});
+
+			// add event listneer
+			one.addEventListener('click',function(event)
+			{
+			});
+
+			// create buttton
+			var two = Titanium.UI.createButton({
+				image:'chat.png'
+			});
+
+			// add event listneer
+			two.addEventListener('click',function(event)
+			{
+				Titanium.UI.currentWindow.close();
+			});
+
+			Titanium.UI.currentWindow.setRightNavButton(one);
+			Titanium.UI.currentWindow.setLeftNavButton(two);
+
+			Titanium.App.Properties.setBool('showNavButtons3',false);
+
+		}
+		if (Titanium.App.Properties.getBool('showNavButtons2')==true)
+		{
+
+			// create buttton
+			var one = Titanium.UI.createButton({
+				title:'DONE',
+				style:Titanium.UI.iPhone.SystemButtonStyle.DONE
+			});
+
+			// add event listneer
+			one.addEventListener('click',function(event)
+			{
+			});
+
+			// create buttton
+			var two = Titanium.UI.createButton({
+				title:'PLAIN',
+				style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN
+			});
+
+			// add event listneer
+			two.addEventListener('click',function(event)
+			{
+				Titanium.UI.currentWindow.close();
+			});
+
+			Titanium.UI.currentWindow.setRightNavButton(one);
+			Titanium.UI.currentWindow.setLeftNavButton(two);
+
+			Titanium.App.Properties.setBool('showNavButtons2',false);
+
+		}
+
+		if (Titanium.App.Properties.getBool('showNavButtons1')==true)
+		{
+
+			// create buttton
+			var refresh = Titanium.UI.createButton({
+				systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
+			});
+
+			// add event listneer
+			refresh.addEventListener('click',function(event)
+			{
+			});
+
+			// create buttton
+			var cancel = Titanium.UI.createButton({
+				title:'Foo',
+				style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
+			});
+
+			// add event listneer
+			cancel.addEventListener('click',function(event)
+			{
+				Titanium.UI.currentWindow.close();
+			});
+
+			Titanium.UI.currentWindow.setRightNavButton(refresh);
+			Titanium.UI.currentWindow.setLeftNavButton(cancel);
+
+			Titanium.App.Properties.setBool('showNavButtons1',false);
+
+		}
+		if (Titanium.App.Properties.getBool('statusBar')==true)
+		{
+			// set status bar color to one of the 3 supported options
+			Titanium.UI.iPhone.setStatusBarStyle(Titanium.UI.iPhone.StatusBar.TRANSLUCENT_BLACK);
+
+			Titanium.App.Properties.setBool('statusBar',false);
+		}
+		
+	};
+
+
+	</script>
+</body>
+</html>
